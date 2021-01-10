@@ -1,0 +1,143 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #eaeaf1;
+}
+
+.header {
+  align-items: center;
+  margin: auto;
+  padding: 30px 0 20px 0;
+  width: 65%;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid #d2d3d4;
+  margin-bottom: 20px;
+}
+.header__title {
+  display: block;
+  font-size: 30px;
+}
+.header__button {
+  padding: 12px;
+  background: #007bff;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.main-section {
+  width: 65%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+}
+.main-section__list {
+  list-style: none;
+  background: #fff;
+  width: 30%;
+  height: 650px;
+  border-radius: 5px;
+}
+.main-section__list:empty {
+  display: none;
+}
+.main-section__item {
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  border-bottom: 2px solid #eaeaf1;
+}
+.main-section__item--active {
+  background: #ced0fd;
+}
+.main-section__time {
+  display: block;
+  padding-top: 10px;
+  color: #acacac;
+}
+.main-section__content {
+  background: #fff;
+  width: 68%;
+  height: 650px;
+  border-radius: 5px;
+  padding: 10px;
+}
+.main-section__content:empty {
+  display: none;
+}
+.main-section__content-container {
+  margin-bottom: 10px;
+}
+.main-section__content-title {
+  margin-bottom: 10px;
+}
+.main-section__content-time {
+  background: #fcf8e3;
+}
+.main-section__content-description {
+  font-size: 20px;
+  line-height: 25px;
+}
+
+.modal {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.modal__fullback {
+  display: flex;
+  background: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  height: 100%;
+}
+.modal--active {
+  display: block;
+}
+.modal__close {
+  position: absolute;
+  top: 0;
+  right: 6px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.add-form {
+  position: relative;
+  padding: 30px;
+  width: 50%;
+  background: #eaeaf1;
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  margin: auto;
+}
+.add-form__title {
+  padding: 10px;
+}
+.add-form__content {
+  padding: 10px;
+  height: 200px;
+}
+.add-form__button {
+  margin: auto;
+  width: 20%;
+  padding: 12px;
+  background: #007bff;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/*# sourceMappingURL=style.d9cbfdb6.css.map */
