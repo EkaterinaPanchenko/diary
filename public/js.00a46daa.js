@@ -117,9 +117,131 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"js/index.js":[function(require,module,exports) {
-console.log("init!");
-},{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+})({"js/content.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Content = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Content = /*#__PURE__*/function () {
+  function Content(contentEl) {
+    _classCallCheck(this, Content);
+
+    this.contentEl = contentEl;
+  }
+
+  _createClass(Content, [{
+    key: "render",
+    value: function render(item) {
+      var content = "\n        <div class=\"main-section__content-container\">\n            <h2 class=\"main-section__content-title\">".concat(item.title, "</h2>\n            <time class=\"main-section__content-time\">10.01.2021 14:00</time>\n            <p class=\"main-section__content-description\">").concat(item.content, "</p>\n        </div>\n    ");
+      this.contentEl.innerHTML = content;
+    }
+  }]);
+
+  return Content;
+}();
+
+exports.Content = Content;
+},{}],"js/list.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.List = void 0;
+
+var _content = require("./content");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var List = /*#__PURE__*/function () {
+  function List(listEl, list) {
+    _classCallCheck(this, List);
+
+    this.list = list;
+    this.listEl = listEl;
+    this.contentEl = document.querySelector("#content");
+    this.content = new _content.Content(this.contentEl); // создаем эземпляр класса Content (content.js)
+
+    this.init();
+  }
+
+  _createClass(List, [{
+    key: "init",
+    value: function init() {
+      // запускаем метод render
+      this.render();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this = this;
+
+      this.listEl.innerHTML = ""; // проходимся по list (data.json) и вставляем значения title и id в создаваемые li
+
+      this.list.forEach(function (item, index) {
+        var liEl = document.createElement("li");
+        liEl.classList = "main-section__item";
+        liEl.setAttribute("data-id", item.id);
+        liEl.innerHTML = "".concat(item.title, "<time class=\"main-section__time\">10.01.2021 14:00</time>"); // по клику вызаваем метод render(item) - отрисовывается content соответствующий li
+
+        liEl.addEventListener("click", function (event) {
+          // записываем в массив все li (до этого был псевдомассив - html колекция)
+          var items = Array.from(document.querySelectorAll(".main-section__item")); // удаляем класс active
+
+          items.forEach(function (elem) {
+            elem.classList.remove("main-section__item--active");
+          }); // добавляем класс active
+
+          liEl.classList.add("main-section__item--active");
+
+          _this.content.render(item);
+        });
+
+        if (index === 0 && _this.list.length > 0) {
+          liEl.classList.add("main-section__item--active");
+
+          _this.content.render(item);
+        }
+
+        _this.listEl.append(liEl); // используем append для добавления элемента созданного динамически
+
+      });
+    }
+  }]);
+
+  return List;
+}();
+
+exports.List = List;
+},{"./content":"js/content.js"}],"js/index.js":[function(require,module,exports) {
+"use strict";
+
+var _list = require("./list");
+
+var listEl = document.querySelector("#list");
+fetch("/api/data", {
+  method: "GET"
+}).then(function (response) {
+  return response.json();
+}).then(function (data) {
+  return new _list.List(listEl, data.list);
+}).catch(function (error) {
+  return console.error(error);
+});
+},{"./list":"js/list.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
