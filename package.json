@@ -1,0 +1,24 @@
+{
+  "name": "diary",
+  "version": "1.0.0",
+  "description": "Diary",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel <your entry file>",
+    "build": "parcel build <your entry file>"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EkaterinaPanchenko/diary.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EkaterinaPanchenko/diary/issues"
+  },
+  "homepage": "https://github.com/EkaterinaPanchenko/diary#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
+}
