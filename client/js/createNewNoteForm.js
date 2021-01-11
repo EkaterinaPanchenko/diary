@@ -1,6 +1,6 @@
 import { List } from "./list";
 
-export class CreateForm {
+export class CreateNewNoteForm {
   constructor() {
     this.createButton = document.querySelector("#create");
     this.createForm = document.querySelector("#form");

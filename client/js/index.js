@@ -1,7 +1,7 @@
 import { List } from "./list";
-import { CreateForm } from "./createForm";
+import { CreateNewNoteForm } from "./createNewNoteForm";
 
-const createForm = new CreateForm();
+const createNewNoteForm = new CreateNewNoteForm();
 
 const listEl = document.querySelector("#list");
 
