@@ -318,21 +318,25 @@ var CreateForm = /*#__PURE__*/function () {
       var _this2 = this;
 
       event.preventDefault();
-      fetch("/api/data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8"
-        },
-        body: JSON.stringify(this.getFormData())
-      }).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        return new _list.List(_this2.listContainer, data.list);
-      }).catch(function (error) {
-        return console.error(error);
-      });
-      this.createForm.reset();
-      this.toggleModal();
+      var formData = this.getFormData();
+
+      if (this.isFormValid(formData)) {
+        fetch("/api/data", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8"
+          },
+          body: JSON.stringify(formData)
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          return new _list.List(_this2.listContainer, data.list);
+        }).catch(function (error) {
+          return console.error(error);
+        });
+        this.createForm.reset();
+        this.toggleModal();
+      }
     } // Получаем объект полей формы
 
   }, {
@@ -361,6 +365,19 @@ var CreateForm = /*#__PURE__*/function () {
       }
 
       return data;
+    }
+  }, {
+    key: "isFormValid",
+    value: function isFormValid(_ref) {
+      var content = _ref.content,
+          title = _ref.title;
+
+      if (content.trim().length > 1 && title.trim().length > 1) {
+        return true;
+      }
+
+      alert("Текст должен быть не короче 2 символов и не длиннее 80 для заголовка и 200 для описания");
+      return false;
     }
   }]);
 

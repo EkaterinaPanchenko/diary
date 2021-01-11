@@ -46,6 +46,8 @@ body {
     width: 30%;
     height: 650px;
     border-radius: 5px;
+    overflow-y: auto;
+
     &:empty {
       display: none;
     }

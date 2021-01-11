@@ -44,6 +44,7 @@ body {
   width: 30%;
   height: 650px;
   border-radius: 5px;
+  overflow-y: auto;
 }
 .main-section__list:empty {
   display: none;

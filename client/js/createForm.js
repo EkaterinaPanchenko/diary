@@ -32,17 +32,21 @@ export class CreateForm {
   onSubmit(event) {
     event.preventDefault();
 
-    fetch("/api/data", {
-      method: "POST",
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-      body: JSON.stringify(this.getFormData()),
-    })
-      .then((response) => response.json())
-      .then((data) => new List(this.listContainer, data.list))
-      .catch((error) => console.error(error));
+    const formData = this.getFormData();
 
-    this.createForm.reset();
-    this.toggleModal();
+    if (this.isFormValid(formData)) {
+      fetch("/api/data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(formData),
+      })
+        .then((response) => response.json())
+        .then((data) => new List(this.listContainer, data.list))
+        .catch((error) => console.error(error));
+
+      this.createForm.reset();
+      this.toggleModal();
+    }
   }
 
   // Получаем объект полей формы
@@ -58,5 +62,15 @@ export class CreateForm {
     }
 
     return data;
+  }
+
+  isFormValid({ content, title }) {
+    if (content.trim().length > 1 && title.trim().length > 1) {
+      return true;
+    }
+    alert(
+      "Текст должен быть не короче 2 символов и не длиннее 80 для заголовка и 200 для описания"
+    );
+    return false;
   }
 }
