@@ -1,4 +1,7 @@
 import { List } from "./list";
+import { CreateForm } from "./createForm";
+
+const createForm = new CreateForm();
 
 const listEl = document.querySelector("#list");
 

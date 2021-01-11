@@ -141,8 +141,14 @@ var Content = /*#__PURE__*/function () {
   _createClass(Content, [{
     key: "render",
     value: function render(item) {
-      var content = "\n        <div class=\"main-section__content-container\">\n            <h2 class=\"main-section__content-title\">".concat(item.title, "</h2>\n            <time class=\"main-section__content-time\">10.01.2021 14:00</time>\n            <p class=\"main-section__content-description\">").concat(item.content, "</p>\n        </div>\n    ");
+      var content = "\n        <div class=\"main-section__content-container\">\n            <h2 class=\"main-section__content-title\">".concat(item.title, "</h2>\n            <time class=\"main-section__content-time\">").concat(this.getFormatedDate(+item.id), "</time>\n            <p class=\"main-section__content-description\">").concat(item.content, "</p>\n        </div>\n    ");
       this.contentEl.innerHTML = content;
+    } // Форматируем id (из new Date) к виду "10.01.2021, 23:25:27"
+
+  }, {
+    key: "getFormatedDate",
+    value: function getFormatedDate(id) {
+      return new Date(id).toLocaleString();
     }
   }]);
 
@@ -192,33 +198,51 @@ var List = /*#__PURE__*/function () {
       this.listEl.innerHTML = ""; // проходимся по list (data.json) и вставляем значения title и id в создаваемые li
 
       this.list.forEach(function (item, index) {
-        var liEl = document.createElement("li");
-        liEl.classList = "main-section__item";
-        liEl.setAttribute("data-id", item.id);
-        liEl.innerHTML = "".concat(item.title, "<time class=\"main-section__time\">10.01.2021 14:00</time>"); // по клику вызаваем метод render(item) - отрисовывается content соответствующий li
-
-        liEl.addEventListener("click", function (event) {
-          // записываем в массив все li (до этого был псевдомассив - html колекция)
-          var items = Array.from(document.querySelectorAll(".main-section__item")); // удаляем класс active
-
-          items.forEach(function (elem) {
-            elem.classList.remove("main-section__item--active");
-          }); // добавляем класс active
-
-          liEl.classList.add("main-section__item--active");
-
-          _this.content.render(item);
-        });
-
-        if (index === 0 && _this.list.length > 0) {
-          liEl.classList.add("main-section__item--active");
-
-          _this.content.render(item);
-        }
+        var liEl = _this.getListItem(item, index);
 
         _this.listEl.append(liEl); // используем append для добавления элемента созданного динамически
 
       });
+    } // Форматируем id (из new Date) к виду "10.01.2021, 23:25:27"
+
+  }, {
+    key: "getFormatedDate",
+    value: function getFormatedDate(id) {
+      return new Date(id).toLocaleString();
+    }
+  }, {
+    key: "getListItem",
+    value: function getListItem(item, index) {
+      var _this2 = this;
+
+      var liEl = document.createElement("li");
+      liEl.classList = "main-section__item";
+      liEl.setAttribute("data-id", item.id);
+      liEl.innerHTML = "\n      ".concat(item.title, "\n      <time class=\"main-section__time\">").concat(this.getFormatedDate(+item.id), "</time>\n    "); // по клику вызаваем метод render(item) - отрисовывается content соответствующий li
+
+      liEl.addEventListener("click", function () {
+        _this2.onListItemClick(liEl, item);
+      });
+
+      if (index === 0 && this.list.length > 0) {
+        liEl.classList.add("main-section__item--active");
+        this.content.render(item);
+      }
+
+      return liEl;
+    }
+  }, {
+    key: "onListItemClick",
+    value: function onListItemClick(liEl, item) {
+      // записываем в массив все li (до этого был псевдомассив - html колекция)
+      var items = Array.from(document.querySelectorAll(".main-section__item")); // удаляем класс active
+
+      items.forEach(function (elem) {
+        elem.classList.remove("main-section__item--active");
+      }); // добавляем класс active
+
+      liEl.classList.add("main-section__item--active");
+      this.content.render(item);
     }
   }]);
 
@@ -226,11 +250,132 @@ var List = /*#__PURE__*/function () {
 }();
 
 exports.List = List;
-},{"./content":"js/content.js"}],"js/index.js":[function(require,module,exports) {
+},{"./content":"js/content.js"}],"js/createForm.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.CreateForm = void 0;
+
+var _list = require("./list");
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var CreateForm = /*#__PURE__*/function () {
+  function CreateForm() {
+    _classCallCheck(this, CreateForm);
+
+    this.createButton = document.querySelector("#create");
+    this.createForm = document.querySelector("#form");
+    this.modal = document.querySelector("#modal");
+    this.close = document.querySelector("#close");
+    this.listContainer = document.querySelector("#list");
+    this.init();
+  }
+
+  _createClass(CreateForm, [{
+    key: "init",
+    value: function init() {
+      var _this = this;
+
+      this.createButton.addEventListener("click", function () {
+        _this.toggleModal();
+      });
+      this.close.addEventListener("click", function () {
+        _this.toggleModal();
+      });
+      this.createForm.addEventListener("submit", function (event) {
+        _this.onSubmit(event);
+      });
+    }
+  }, {
+    key: "toggleModal",
+    value: function toggleModal() {
+      this.modal.classList.toggle("modal--active");
+    }
+  }, {
+    key: "onSubmit",
+    value: function onSubmit(event) {
+      var _this2 = this;
+
+      event.preventDefault();
+      fetch("/api/data", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8"
+        },
+        body: JSON.stringify(this.getFormData())
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        return new _list.List(_this2.listContainer, data.list);
+      }).catch(function (error) {
+        return console.error(error);
+      });
+      this.createForm.reset();
+      this.toggleModal();
+    } // Получаем объект полей формы
+
+  }, {
+    key: "getFormData",
+    value: function getFormData() {
+      var data = {};
+      var currentDate = new Date();
+      var formData = new FormData(this.createForm);
+      formData.append("id", currentDate.getTime());
+
+      var _iterator = _createForOfIteratorHelper(formData),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var _step$value = _slicedToArray(_step.value, 2),
+              name = _step$value[0],
+              value = _step$value[1];
+
+          data[name] = value;
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      return data;
+    }
+  }]);
+
+  return CreateForm;
+}();
+
+exports.CreateForm = CreateForm;
+},{"./list":"js/list.js"}],"js/index.js":[function(require,module,exports) {
 "use strict";
 
 var _list = require("./list");
 
+var _createForm = require("./createForm");
+
+var createForm = new _createForm.CreateForm();
 var listEl = document.querySelector("#list");
 fetch("/api/data", {
   method: "GET"
@@ -241,7 +386,7 @@ fetch("/api/data", {
 }).catch(function (error) {
   return console.error(error);
 });
-},{"./list":"js/list.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./list":"js/list.js","./createForm":"js/createForm.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -269,7 +414,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62487" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55518" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
