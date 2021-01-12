@@ -22,13 +22,14 @@
   </main>
   <div id="modal" class="modal">
     <div class="modal__fullback">
-      <form id="form" class="add-form">
+      <form id="form" data-formEdit="edit" class="add-form">
         <div id="close" class="modal__close">✖</div>
-        <input maxlength="80" minlength="2" required name="title" class="add-form__title" type="text"
+        <input id="id" type="hidden" name="id">
+        <input id="titleInput" maxlength="80" minlength="2" required name="title" class="add-form__title" type="text"
           placeholder="Заголовок">
-        <textarea maxlength="1000" minlength="2" required name="content" class="add-form__content"
+        <textarea id="contentTextarea" maxlength="1000" minlength="2" required name="content" class="add-form__content"
           placeholder="Описание"></textarea>
-        <button class="add-form__button">Создать</button>
+        <button class="add-form__button">Готово</button>
       </form>
     </div>
   </div>

@@ -20,3 +20,23 @@ router.post("/", function (req, res, next) {
 });
 
 module.exports = router;
+
+router.put("/:id", (req, res, next) => {
+  const { id } = req.params;
+  const updatedItem = req.body;
+
+  const arr = [...data.list];
+  const newArr = arr.map((item) => {
+    if (item.id == id) {
+      return updatedItem;
+    }
+
+    return item;
+  });
+  data.list = newArr;
+
+  fs.writeFile("./data.json", JSON.stringify(data), (err) => {
+    if (err) throw err;
+    res.send(JSON.stringify(data));
+  });
+});

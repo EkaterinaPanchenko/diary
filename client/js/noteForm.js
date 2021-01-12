@@ -1,18 +1,22 @@
 import { List } from "./list";
 
-export class CreateNewNoteForm {
+export class NoteForm {
   constructor() {
     this.createButton = document.querySelector("#create");
-    this.createForm = document.querySelector("#form");
+    this.noteForm = document.querySelector("#form");
     this.modal = document.querySelector("#modal");
     this.close = document.querySelector("#close");
     this.listContainer = document.querySelector("#list");
+    this.title = document.querySelector("#titleInput");
+    this.content = document.querySelector("#contentTextarea");
+    this.id = document.querySelector("#id");
 
     this.init();
   }
 
   init() {
     this.createButton.addEventListener("click", () => {
+      this.clearForm();
       this.toggleModal();
     });
 
@@ -20,9 +24,17 @@ export class CreateNewNoteForm {
       this.toggleModal();
     });
 
-    this.createForm.addEventListener("submit", (event) => {
+    this.noteForm.addEventListener("submit", (event) => {
       this.onSubmit(event);
     });
+  }
+
+  // обнуляем данные из формы
+  clearForm() {
+    this.title.value = "";
+    this.content.value = "";
+    this.id.value = "";
+    this.noteForm.reset();
   }
 
   toggleModal() {
@@ -32,19 +44,21 @@ export class CreateNewNoteForm {
   onSubmit(event) {
     event.preventDefault();
 
-    const formData = this.getFormData();
+    const data = this.getFormData();
+    const formData = new FormData(this.noteForm);
+    const isEditMode = formData.get("id");
 
-    if (this.isFormValid(formData)) {
-      fetch("/api/data", {
-        method: "POST",
+    if (this.isFormValid(data)) {
+      fetch(`/api/data${isEditMode ? `/${formData.get("id")}` : ""}`, {
+        method: isEditMode ? "PUT" : "POST",
         headers: { "Content-Type": "application/json;charset=utf-8" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
       })
         .then((response) => response.json())
         .then((data) => new List(this.listContainer, data.list))
         .catch((error) => console.error(error));
 
-      this.createForm.reset();
+      this.clearForm();
       this.toggleModal();
     }
   }
@@ -53,7 +67,7 @@ export class CreateNewNoteForm {
   getFormData() {
     const data = {};
     const currentDate = new Date();
-    const formData = new FormData(this.createForm);
+    const formData = new FormData(this.noteForm); //new FormData  собирает все данные с полей формы в объект, где ключ будет атрибут name
 
     formData.append("id", currentDate.getTime());
 

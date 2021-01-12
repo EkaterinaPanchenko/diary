@@ -34,7 +34,7 @@ export class List {
 
     liEl.classList = "main-section__item";
     liEl.setAttribute("data-id", item.id);
-    liEl.innerHTML = `
+    liEl.innerHTML =`
       ${item.title}
       <time class="main-section__time">${this.getFormatedDate(+item.id)}</time>
     `;
