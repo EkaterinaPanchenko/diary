@@ -1,3 +1,5 @@
+import { List } from "./list";
+
 export class Content {
   constructor(contentEl) {
     this.contentEl = contentEl;
@@ -5,6 +7,13 @@ export class Content {
     this.title = document.querySelector("#titleInput");
     this.content = document.querySelector("#contentTextarea");
     this.id = document.querySelector("#id");
+    this.contentEl = document.querySelector("#content");
+    this.listContainer = document.querySelector("#list");
+  }
+
+  init(item) {
+    this.editForm(item);
+    this.deleteNote(item.id);
   }
 
   render(item) {
@@ -15,20 +24,47 @@ export class Content {
               +item.id
             )}</time>
             <p class="main-section__content-description">${item.content}</p>
-            <input id="buttonEdit" class="button-edit" type="button" method="get" input="button" value="Редактировать">
+            <div class="button-container">
+              <input id="buttonEdit" class="button-edit" type="button" method="get" input="button" value="Редактировать">
+              <input id="buttonDelete" type="button" class="button-delete" value="Удалить">
+            </div>
         </div>
     `;
+
     this.contentEl.innerHTML = content;
-    this.editForm(item);
+
+    this.init(item);
   }
 
   editForm(item) {
-    const buttonForm = document.querySelector("#buttonEdit");
-    buttonForm.addEventListener("click", () => {
+    const editButton = document.querySelector("#buttonEdit");
+
+    editButton.addEventListener("click", () => {
       this.modal.classList.toggle("modal--active");
       this.title.value = item.title;
       this.content.value = item.content;
       this.id.value = item.id;
+    });
+  }
+
+  clearContent() {
+    this.contentEl.innerHTML = "";
+  }
+
+  deleteNote(id) {
+    const deleteButton = document.querySelector("#buttonDelete");
+
+    deleteButton.addEventListener("click", () => {
+      fetch(`/api/data/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.clearContent();
+          return new List(this.listContainer, data.list);
+        })
+        .catch((error) => console.error(error));
     });
   }
 
